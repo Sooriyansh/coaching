@@ -4,12 +4,14 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const session = require('express-session');
 const flash = require('connect-flash');
+const dotenv = require('dotenv');
+
 const path = require('path');
 
 const app = express();
 
 // MongoDB Connection (without deprecated options)
-mongoose.connect('mongodb://localhost:27017/coaching_fees_db')
+mongoose.connect(process.env.MONGODB_URI)
 .then(() => console.log('MongoDB Connected Successfully'))
 .catch(err => console.log('MongoDB Connection Error:', err));
 
@@ -100,4 +102,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     console.log(`http://localhost:${PORT}`);
+
 });
