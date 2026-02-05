@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pay Fees - <%= student.name %></title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="/">📚 Coaching Management</a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+
+    <% if (success_msg) { %>
+        <div class="alert alert-success alert-dismissible fade show">
+            <%= success_msg %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <% } %>
+
+    <% if (error_msg) { %>
+        <div class="alert alert-danger alert-dismissible fade show">
+            <%= error_msg %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <% } %>
+
+    <!-- Student Info -->
+    <div class="card shadow mb-4">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0">👨‍🎓 Student Information</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3"><strong>ID:</strong> <p><%= student.studentId %></p></div>
+                <div class="col-md-3"><strong>Name:</strong> <p><%= student.name %></p></div>
+                <div class="col-md-3"><strong>Class:</strong> <p><%= student.class %></p></div>
+                <div class="col-md-3"><strong>Phone:</strong> <p><%= student.phone %></p></div>
+            </div>
+        </div>
+    </div>
+
+    <% 
+        const monthlyFees = Number(student.monthlyFees);
+        const pMonths = pendingMonths ?? 1;
+        const sAmount = suggestedAmount ?? monthlyFees;
+    %>
+
+    <!-- Summary -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-info text-white text-center shadow">
+                <div class="card-body">
+                    <h5>Monthly Fees</h5>
+                    <h2>₹<%= monthlyFees.toLocaleString('en-IN') %></h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-warning text-white text-center shadow">
+                <div class="card-body">
+                    <h5>Pending Months</h5>
+                    <h2><%= pMonths %></h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card bg-danger text-white text-center shadow">
+                <div class="card-body">
+                    <h5>Suggested Amount</h5>
+                    <h2>₹<%= sAmount.toLocaleString('en-IN') %></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Form -->
+    <div class="card shadow">
+        <div class="card-header bg-success text-white">
+            <h3>💰 Payment Form</h3>
+        </div>
+        <div class="card-body">
+
+            <form action="/fees/pay/<%= student._id %>" method="POST" onsubmit="return validateForm()">
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Payment Date</label>
+                        <input type="date" class="form-control" name="paymentDate"
+                               value="<%= new Date().toISOString().split('T')[0] %>" required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Months</label>
+                        <input type="number" id="monthsPaid" class="form-control"
+                               name="monthsPaid" value="<%= pMonths %>" min="1" max="12" required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Amount (₹)</label>
+                        <input type="number" id="amount" class="form-control"
+                               name="amount" value="<%= sAmount %>" required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Payment Method</label>
+                        <select id="paymentMethod" class="form-select" name="paymentMethod" required>
+                            <option value="Cash">Cash</option>
+                            <option value="UPI">UPI</option>
+                            <option value="Online">Online</option>
+                            <option value="Cheque">Cheque</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Transaction / Cheque No.</label>
+                        <input type="text" id="transactionId" class="form-control" name="transactionId">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Remarks</label>
+                        <textarea class="form-control" name="remarks"></textarea>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    Months: <strong id="monthsInfo"><%= pMonths %></strong> |
+                    Total: <strong id="totalInfo">₹<%= sAmount.toLocaleString('en-IN') %></strong>
+                </div>
+
+                <div class="text-end">
+                    <a href="/students/view/<%= student._id %>" class="btn btn-secondary">Cancel</a>
+                    <button class="btn btn-success">Submit Payment</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const monthlyFees = <%- JSON.stringify(monthlyFees) %>;
+    const studentName = <%- JSON.stringify(student.name) %>;
+
+    const monthsInput = document.getElementById('monthsPaid');
+    const amountInput = document.getElementById('amount');
+
+    monthsInput.addEventListener('input', () => {
+        const months = Number(monthsInput.value) || 1;
+        const total = months * monthlyFees;
+
+        amountInput.value = total;
+        document.getElementById('monthsInfo').textContent = months;
+        document.getElementById('totalInfo').textContent =
+            '₹' + total.toLocaleString('en-IN');
+    });
+});
+
+function validateForm() {
+    const months = Number(document.getElementById('monthsPaid').value);
+    const amount = Number(document.getElementById('amount').value);
+    const method = document.getElementById('paymentMethod').value;
+
+    if (months < 1 || amount <= 0) {
+        alert('Invalid payment details');
+        return false;
+    }
+
+    return confirm(
+        `Confirm Payment?\n\nStudent: ${"<%= student.name %>"}\nMonths: ${months}\nAmount: ₹${amount}`
+    );
+}
+</script>
+
+</body>
+</html>

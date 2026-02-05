@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coaching Fees Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">📚 Coaching Management</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/students">Students</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/students/add">Add Student</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="feesDropdown" role="button" data-bs-toggle="dropdown">
+                            Fees
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/fees/history">Payment History</a></li>
+                            <li><a class="dropdown-item" href="/fees/pending">Pending Fees</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <% if (success_msg && success_msg.length > 0) { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <%= success_msg %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <% } %>
+
+        <% if (error_msg && error_msg.length > 0) { %>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <%= error_msg %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <% } %>
+
+        <!-- Dashboard Stats -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card stats-card bg-primary text-white shadow">
+                    <div class="card-body text-center">
+                        <h2 class="display-4">👨‍🎓</h2>
+                        <h3 class="mb-0"><%= totalStudents %></h3>
+                        <p class="mb-0">Active Students</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card bg-success text-white shadow">
+                    <div class="card-body text-center">
+                        <h2 class="display-4">💰</h2>
+                        <h3 class="mb-0">₹<%= totalRevenue.toLocaleString('en-IN') %></h3>
+                        <p class="mb-0">Total Revenue</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card bg-danger text-white shadow">
+                    <div class="card-body text-center">
+                        <h2 class="display-4">📊</h2>
+                        <h3 class="mb-0">₹<%= totalPending.toLocaleString('en-IN') %></h3>
+                        <p class="mb-0">Pending Fees</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card bg-info text-white shadow">
+                    <div class="card-body text-center">
+                        <h2 class="display-4">🧾</h2>
+                        <h3 class="mb-0"><%= totalPayments %></h3>
+                        <p class="mb-0">Total Payments</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="jumbotron text-center bg-light p-5 rounded shadow">
+            <h1 class="display-4">Welcome to Monthly Fees Management System</h1>
+            <p class="lead">आसानी से अपने coaching का monthly fees manage करें</p>
+            <hr class="my-4">
+            <p>Students की information add करें, monthly fees track करें और detailed reports देखें</p>
+            <div class="mt-4">
+                <a class="btn btn-primary btn-lg m-2" href="/students/add" role="button">
+                    ➕ Add New Student
+                </a>
+                <a class="btn btn-success btn-lg m-2" href="/students" role="button">
+                    👥 View All Students
+                </a>
+                <a class="btn btn-warning btn-lg m-2" href="/fees/pending" role="button">
+                    ⚠️ Pending Fees
+                </a>
+                <a class="btn btn-info btn-lg m-2" href="/fees/history" role="button">
+                    📜 Payment History
+                </a>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <div class="card text-center shadow">
+                    <div class="card-body">
+                        <h2 class="text-primary">👨‍🎓</h2>
+                        <h5 class="card-title">Student Management</h5>
+                        <p class="card-text">Students की complete information manage करें</p>
+                        <a href="/students" class="btn btn-primary">View Students</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center shadow">
+                    <div class="card-body">
+                        <h2 class="text-success">💰</h2>
+                        <h5 class="card-title">Monthly Fees Tracking</h5>
+                        <p class="card-text">Month-wise fees payment track करें</p>
+                        <a href="/fees/history" class="btn btn-success">Payment History</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center shadow">
+                    <div class="card-body">
+                        <h2 class="text-danger">⚠️</h2>
+                        <h5 class="card-title">Pending Reports</h5>
+                        <p class="card-text">Pending fees aur dues check karein</p>
+                        <a href="/fees/pending" class="btn btn-danger">View Pending</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

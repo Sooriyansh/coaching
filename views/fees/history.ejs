@@ -1,0 +1,42 @@
+<!-- Replace the payment table body section -->
+<tbody>
+    <% 
+    let totalAmount = 0;
+    payments.forEach(payment => { 
+        totalAmount += payment.amount;
+    %>
+        <tr>
+            <td><strong><%= payment.receiptNumber %></strong></td>
+            <td>
+                <% if (payment.student) { %>
+                    <%= payment.student.name %><br>
+                    <small class="text-muted"><%= payment.student.studentId %></small>
+                <% } else { %>
+                    <span class="text-danger">Deleted Student</span>
+                <% } %>
+            </td>
+            <td><%= new Date(payment.paymentDate).toLocaleDateString('en-IN') %></td>
+            <td class="text-success fw-bold">₹<%= payment.amount.toLocaleString('en-IN') %></td>
+            <td><%= payment.monthsPaid %></td>
+            <td>
+                <% if (payment.paymentFor && payment.paymentFor.length > 0) { %>
+                    <% payment.paymentFor.forEach((pf, index) => { 
+                        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    %>
+                        <span class="badge bg-primary"><%= monthNames[pf.month] %>-<%= pf.year %></span>
+                    <% }) %>
+                <% } else { %>
+                    <span class="text-muted">-</span>
+                <% } %>
+            </td>
+            <td><span class="badge bg-info"><%= payment.paymentMethod %></span></td>
+            <td><%= payment.transactionId || '-' %></td>
+            <td>
+                <form action="/fees/delete/<%= payment._id %>?_method=DELETE" method="POST" 
+                      onsubmit="return confirm('Delete this payment record?');" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+    <% }) %>
+</tbody>
