@@ -18,13 +18,13 @@ const app = express();
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI, {
-      serverSelectionTimeoutMS: 5000,
+      //serverSelectionTimeoutMS: 5000,
     });
 
     console.log("✅ MongoDB Connected");
   } catch (err) {
     console.error("❌ MongoDB Connection Failed:", err.message);
-    process.exit(1); // crash instead of buffering forever
+    //process.exit(1); // crash instead of buffering forever
   }
 };
 
@@ -118,4 +118,5 @@ app.listen(PORT, () => {
     console.log(`http://localhost:${PORT}`);
 
 });
+
 
