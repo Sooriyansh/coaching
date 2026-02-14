@@ -11,10 +11,24 @@ const path = require('path');
 const app = express();
 
 // MongoDB Connection (without deprecated options)
-mongoose.connect(process.env.MONGODB_URI)
-.then(() => console.log('MongoDB Connected Successfully'))
-.catch(err => console.log('MongoDB Connection Error:', err));
+//mongoose.connect(process.env.MONGODB_URI)
+//.then(() => console.log('MongoDB Connected Successfully'))
+//.catch(err => console.log('MongoDB Connection Error:', err));
 
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000,
+    });
+
+    console.log("✅ MongoDB Connected");
+  } catch (err) {
+    console.error("❌ MongoDB Connection Failed:", err.message);
+    process.exit(1); // crash instead of buffering forever
+  }
+};
+
+connectDB();
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -104,3 +118,4 @@ app.listen(PORT, () => {
     console.log(`http://localhost:${PORT}`);
 
 });
+
