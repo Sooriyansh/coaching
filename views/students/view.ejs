@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Details - <%= student.name %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">📚 Coaching Management</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/students">Students</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/students/add">Add Student</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="feesDropdown" role="button" data-bs-toggle="dropdown">
+                            Fees
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/fees/history">Payment History</a></li>
+                            <li><a class="dropdown-item" href="/fees/pending">Pending Fees</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <% if (success_msg && success_msg.length > 0) { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <%= success_msg %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <% } %>
+
+        <% if (error_msg && error_msg.length > 0) { %>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <%= error_msg %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <% } %>
+
+        <!-- Student Info Card -->
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">👨‍🎓 Student Details</h3>
+                <a href="/fees/pay/<%= student._id %>" class="btn btn-success">💰 Pay Fees</a>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="table table-borderless">
+                            <tr>
+                                <th width="40%">Student ID:</th>
+                                <td><strong><%= student.studentId %></strong></td>
+                            </tr>
+                            <tr>
+                                <th>Name:</th>
+                                <td><%= student.name %></td>
+                            </tr>
+                            <tr>
+                                <th>Father's Name:</th>
+                                <td><%= student.fatherName %></td>
+                            </tr>
+                            <tr>
+                                <th>Email:</th>
+                                <td><%= student.email %></td>
+                            </tr>
+                            <tr>
+                                <th>Phone:</th>
+                                <td><%= student.phone %></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-borderless">
+                            <tr>
+                                <th width="40%">Class:</th>
+                                <td><%= student.class %></td>
+                            </tr>
+                            <tr>
+                                <th>Course:</th>
+                                <td><%= student.course %></td>
+                            </tr>
+                            <tr>
+                                <th>Address:</th>
+                                <td><%= student.address %></td>
+                            </tr>
+                            <tr>
+                                <th>Admission Date:</th>
+                                <td><%= new Date(student.admissionDate).toLocaleDateString('en-IN') %></td>
+                            </tr>
+                            <tr>
+                                <th>Status:</th>
+                                <td>
+                                    <% if (student.status === 'Active') { %>
+                                        <span class="badge bg-success">Active</span>
+                                    <% } else { %>
+                                        <span class="badge bg-secondary">Inactive</span>
+                                    <% } %>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fees Summary -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-info text-white shadow">
+                    <div class="card-body text-center">
+                        <h5>Monthly Fees</h5>
+                        <h3>₹<%= student.monthlyFees.toLocaleString('en-IN') %></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white shadow">
+                    <div class="card-body text-center">
+                        <h5>Total Paid</h5>
+                        <h3>₹<%= (student.totalPaidFees || 0).toLocaleString('en-IN') %></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-white shadow">
+                    <div class="card-body text-center">
+                        <h5>Pending Months</h5>
+                        <h3><%= pendingMonths %> Months</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-danger text-white shadow">
+                    <div class="card-body text-center">
+                        <h5>Total Due</h5>
+                        <h3>₹<%= totalDue.toLocaleString('en-IN') %></h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment History -->
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">📜 Payment History</h4>
+            </div>
+            <div class="card-body">
+                <% if (!payments || payments.length === 0) { %>
+                    <div class="alert alert-info text-center">
+                        <p class="mb-0">No payment records found for this student.</p>
+                    </div>
+                <% } else { %>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Receipt No.</th>
+                                    <th>Payment Date</th>
+                                    <th>Amount</th>
+                                    <th>Months Paid</th>
+                                    <th>Payment For</th>
+                                    <th>Method</th>
+                                    <th>Transaction ID</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% payments.forEach(payment => { %>
+                                    <tr>
+                                        <td><strong><%= payment.receiptNumber %></strong></td>
+                                        <td><%= new Date(payment.paymentDate).toLocaleDateString('en-IN') %></td>
+                                        <td class="text-success fw-bold">₹<%= payment.amount.toLocaleString('en-IN') %></td>
+                                        <td><%= payment.monthsPaid %> month(s)</td>
+                                        <td>
+                                            <% if (payment.paymentFor && payment.paymentFor.length > 0) { %>
+                                                <% payment.paymentFor.forEach((pf, index) => { 
+                                                    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                                                %>
+                                                    <span class="badge bg-primary"><%= monthNames[pf.month] %>-<%= pf.year %></span>
+                                                <% }) %>
+                                            <% } else { %>
+                                                <span class="text-muted">-</span>
+                                            <% } %>
+                                        </td>
+                                        <td><span class="badge bg-info"><%= payment.paymentMethod %></span></td>
+                                        <td><%= payment.transactionId || '-' %></td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="mt-4 mb-4">
+            <a href="/students" class="btn btn-secondary">← Back to Students</a>
+            <a href="/fees/pay/<%= student._id %>" class="btn btn-success">💰 Pay Fees</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

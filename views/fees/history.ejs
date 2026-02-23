@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment History - Coaching Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/fees-history.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="/">📚 Coaching Management</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/students">Students</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/students/add">Add Student</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle active" href="#" id="feesDropdown" role="button" data-bs-toggle="dropdown">
+                        Fees
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item active" href="/fees/history">Payment History</a></li>
+                        <li><a class="dropdown-item" href="/fees/pending">Pending Fees</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+
+    <!-- Flash Messages -->
+    <% if (typeof success_msg !== 'undefined' && success_msg && success_msg.length > 0) { %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <%= success_msg %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <% } %>
+
+    <% if (typeof error_msg !== 'undefined' && error_msg && error_msg.length > 0) { %>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <%= error_msg %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <% } %>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">💰 Payment History</h2>
+        <div>
+            <a href="/fees/pending" class="btn btn-warning">View Pending Fees</a>
+            <a href="/students" class="btn btn-secondary">Back to Students</a>
+        </div>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Recent Payments</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table payment-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Receipt #</th>
+                            <th>Student</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Months</th>
+                            <th>For Months</th>
+                            <th>Method</th>
+                            <th>Transaction ID</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    <tbody>
+    <% 
+    let totalAmount = 0;
+    if (payments && payments.length > 0) {
+        payments.forEach(payment => { 
+            totalAmount += payment.amount;
+    %>
+        <tr>
+            <td><strong><%= payment.receiptNumber %></strong></td>
+            <td>
+                <% if (payment.student) { %>
+                    <span class="student-name"><%= payment.student.name %></span><br>
+                    <small class="text-muted"><%= payment.student.studentId %></small>
+                <% } else { %>
+                    <span class="text-danger">Deleted Student</span>
+                <% } %>
+            </td>
+            <td><%= new Date(payment.paymentDate).toLocaleDateString('en-IN') %></td>
+            <td class="text-success fw-bold">₹<%= payment.amount.toLocaleString('en-IN') %></td>
+            <td><%= payment.monthsPaid %></td>
+            <td>
+                <% if (payment.paymentFor && payment.paymentFor.length > 0) { %>
+                    <% payment.paymentFor.forEach((pf, index) => { 
+                        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    %>
+                        <span class="badge bg-primary"><%= monthNames[pf.month] %>-<%= pf.year %></span>
+                    <% }) %>
+                <% } else { %>
+                    <span class="text-muted">-</span>
+                <% } %>
+            </td>
+            <td><span class="badge bg-info"><%= payment.paymentMethod %></span></td>
+            <td><%= payment.transactionId || '-' %></td>
+            <td>
+                <form action="/fees/delete/<%= payment._id %>?_method=DELETE" method="POST" 
+                      onsubmit="return confirm('Delete this payment record?');" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+    <% });
+    } else { %>
+        <tr class="empty-row">
+            <td colspan="9">No payment records found.</td>
+        </tr>
+    <% } %>
+</tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold">Total Amount:</td>
+                            <td class="text-success fw-bold">₹<%= totalAmount.toLocaleString('en-IN') %></td>
+                            <td colspan="5"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+

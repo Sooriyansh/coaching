@@ -1,0 +1,179 @@
+/* Payment History Page Styles */
+
+.table-responsive {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Main Table */
+.payment-table {
+    width: 100%;
+    margin-bottom: 0;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+/* Table Header */
+.payment-table thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.payment-table thead th {
+    padding: 14px 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border: none;
+    white-space: nowrap;
+}
+
+/* Table Body Rows */
+.payment-table tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+    transition: all 0.2s ease;
+}
+
+.payment-table tbody tr:hover {
+    background-color: #f8f9ff;
+    transform: scale(1.001);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+}
+
+.payment-table tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+.payment-table tbody tr:nth-child(even):hover {
+    background-color: #f0f4ff;
+}
+
+.payment-table tbody td {
+    padding: 12px 16px;
+    vertical-align: middle;
+    border: none;
+    color: #444;
+}
+
+/* Receipt Number */
+.payment-table tbody td:first-child strong {
+    color: #667eea;
+    font-family: monospace;
+    font-size: 13px;
+    background: #f0f2ff;
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+
+/* Student Name */
+.payment-table .student-name {
+    font-weight: 600;
+    color: #333;
+}
+
+.payment-table .text-muted {
+    font-size: 12px;
+    color: #999 !important;
+}
+
+/* Amount Column */
+.payment-table .text-success {
+    font-size: 15px;
+    color: #28a745 !important;
+}
+
+/* Month Badges */
+.payment-table .badge.bg-primary {
+    background: linear-gradient(135deg, #667eea, #764ba2) !important;
+    font-size: 11px;
+    padding: 5px 8px;
+    border-radius: 20px;
+    margin: 2px;
+    display: inline-block;
+}
+
+/* Payment Method Badge */
+.payment-table .badge.bg-info {
+    background: linear-gradient(135deg, #17a2b8, #138496) !important;
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+/* Deleted Student */
+.payment-table .text-danger {
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* Transaction ID */
+.payment-table td:nth-child(8) {
+    font-family: monospace;
+    font-size: 12px;
+    color: #666;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Delete Button */
+.payment-table .btn-danger {
+    background: linear-gradient(135deg, #ff4757, #c0392b);
+    border: none;
+    border-radius: 8px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(255, 71, 87, 0.3);
+}
+
+.payment-table .btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 71, 87, 0.5);
+    background: linear-gradient(135deg, #c0392b, #96281b);
+}
+
+/* Total Row (Footer) */
+.payment-table tfoot tr {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    font-weight: 700;
+    border-top: 2px solid #dee2e6;
+}
+
+.payment-table tfoot td {
+    padding: 14px 16px;
+    color: #333;
+    font-size: 15px;
+}
+
+/* Empty State */
+.payment-table .empty-row td {
+    text-align: center;
+    padding: 40px;
+    color: #aaa;
+    font-size: 16px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .payment-table {
+        font-size: 12px;
+    }
+
+    .payment-table thead th,
+    .payment-table tbody td {
+        padding: 8px 10px;
+    }
+
+    .payment-table .badge {
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+
+    .payment-table .btn-danger {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+}

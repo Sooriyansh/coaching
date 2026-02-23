@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Student</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">📚 Coaching Management</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/students">Students</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/students/add">Add Student</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="feesDropdown" role="button" data-bs-toggle="dropdown">
+                            Fees
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/fees/history">Payment History</a></li>
+                            <li><a class="dropdown-item" href="/fees/pending">Pending Fees</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <% if (success_msg && success_msg.length > 0) { %>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <%= success_msg %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <% } %>
+
+        <% if (error_msg && error_msg.length > 0) { %>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <%= error_msg %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <% } %>
+
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">➕ Add New Student</h3>
+            </div>
+            <div class="card-body">
+                <form action="/students/add" method="POST">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="studentId" class="form-label">Student ID *</label>
+                            <input type="text" class="form-control" id="studentId" name="studentId" required 
+                                   placeholder="e.g., STU001">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="name" class="form-label">Student Name *</label>
+                            <input type="text" class="form-control" id="name" name="name" required 
+                                   placeholder="Full Name">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="fatherName" class="form-label">Father's Name *</label>
+                            <input type="text" class="form-control" id="fatherName" name="fatherName" required 
+                                   placeholder="Father's Full Name">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Email *</label>
+                            <input type="email" class="form-control" id="email" name="email" required 
+                                   placeholder="student@example.com">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="phone" class="form-label">Phone Number *</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" required 
+                                   placeholder="10-digit number" pattern="[0-9]{10}">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="class" class="form-label">Class *</label>
+                            <select class="form-select" id="class" name="class" required>
+                                <option value="">Select Class</option>
+                                <option value="6th">6th</option>
+                                <option value="7th">7th</option>
+                                <option value="8th">8th</option>
+                                <option value="9th">9th</option>
+                                <option value="10th">10th</option>
+                                <option value="11th">11th</option>
+                                <option value="12th">12th</option>
+                                <option value="Graduation">Graduation</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="course" class="form-label">Course *</label>
+                            <select class="form-select" id="course" name="course" required>
+                                <option value="">Select Course</option>
+                                <option value="Mathematics">Mathematics</option>
+                                <option value="Science">Science</option>
+                                <option value="English">English</option>
+                                <option value="All Subjects">All Subjects</option>
+                                <option value="JEE Preparation">JEE Preparation</option>
+                                <option value="NEET Preparation">NEET Preparation</option>
+                                <option value="Foundation Course">Foundation Course</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="admissionDate" class="form-label">Admission Date *</label>
+                            <input type="date" class="form-control" id="admissionDate" name="admissionDate" required>
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <label for="address" class="form-label">Address *</label>
+                            <textarea class="form-control" id="address" name="address" rows="3" required 
+                                      placeholder="Complete Address"></textarea>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="monthlyFees" class="form-label">Monthly Fees (₹) *</label>
+                            <input type="number" class="form-control" id="monthlyFees" name="monthlyFees" required 
+                                   placeholder="Monthly fees amount" min="0">
+                            <small class="text-muted">यह fees हर महीने की होगी</small>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a href="/students" class="btn btn-secondary">Cancel</a>
+                        <button type="reset" class="btn btn-warning">Reset</button>
+                        <button type="submit" class="btn btn-primary">Save Student</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
