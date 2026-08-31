@@ -8,7 +8,7 @@ const path = require('path');
 const app = express();
 require('dotenv').config();
 
-//  || 'mongodb://localhost:27017/coaching_center'
+//  || 'mongodb://localhost:27017/coaching center"
 const MONGODB_URI = process.env.MONGODB_URI;
 const connectDB = async () => {
   try {
